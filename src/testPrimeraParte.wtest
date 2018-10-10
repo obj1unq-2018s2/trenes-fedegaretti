@@ -1,0 +1,63 @@
+import formacion.*
+import trenes.*
+import deposito.*
+
+describe "tests primera parte"{
+	//Vagones de Pasajeros
+	var vagonPasajeros1 = new VagonDePasajeros( largo = 3, ancho = 2 )
+	var vagonPasajeros2 = new VagonDePasajeros( largo = 4, ancho = 3 )
+	//Vagones de Carga
+	var vagonCarga1 = new VagonDeCarga( cargaMax = 2000 )
+	var vagonCarga2 = new VagonDeCarga( cargaMax = 3000 )
+	//Locomotoras
+	var locomotora1 = new Locomotora( peso = 1000, velocidadMax = 80, pesoMaxArrastre = 12000 )
+	var locomotora2 = new Locomotora( peso = 2000, velocidadMax = 70, pesoMaxArrastre = 16000 )
+	var locomotora3 = new Locomotora( peso = 3000, velocidadMax = 60, pesoMaxArrastre = 20000 )
+	var locomotora4 = new Locomotora( peso = 3000, velocidadMax = 60, pesoMaxArrastre = 5000 )
+	//Formaciones
+	var formacion1 = new Formacion(
+		vagones = #{vagonPasajeros1, vagonPasajeros2, vagonCarga1, vagonCarga2},
+		locomotoras = #{locomotora1, locomotora2, locomotora3}
+		)
+	var formacion2 = new Formacion(
+		vagones = #{ vagonPasajeros1,vagonCarga2 },
+		locomotoras = #{ locomotora1, locomotora3 }
+		)
+	var formacion3 = new Formacion(
+		vagones = #{ vagonPasajeros1,vagonPasajeros2,vagonCarga1,vagonCarga2 },
+		locomotoras = #{ locomotora4 }
+		)
+	//Depositos 
+	var deposito1 = new Deposito(
+		formaciones = #{ formacion1, formacion3 },
+		locomotoras = #{ locomotora2,locomotora3 }
+	)	
+	var deposito2 = new Deposito(
+		formaciones = #{formacion2, formacion3},
+		locomotoras = #{locomotora1, locomotora2}
+	)
+	//TESTS FORMACIONES
+	test "Vagones Livianos"{
+		assert.equals(formacion1.cantVagonesLivianos(), 2)
+	}
+	test "Velocidad Maxima Formacion"{
+		assert.equals(formacion1.velocidadMax(),locomotora3)
+	}
+	test "Formacion Eficiente"{
+		assert.that(formacion1.esEficiente())
+		assert.notThat(formacion3.esEficiente())
+	}
+	test "Formacion Puede Moverse"{
+		assert.that(formacion1.puedeMoverse())
+		assert.notThat(formacion3.puedeMoverse())
+	}
+	test "Kilos Que Faltan Para Moverse"{
+		assert.equals(formacion1.kilosQueFaltanParaMoverse(), 0)
+		assert.equals(formacion3.kilosQueFaltanParaMoverse(), 8440)
+	}
+	//TESTS DEPOSITOS
+	test "Deposito Necesita Conductor Experimentado"{
+		assert.that(deposito1.necesitaConductorExperimentado())
+	}
+	
+}

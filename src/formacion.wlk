@@ -14,16 +14,20 @@ class Formacion {
 	
 	method pesoTotalVagones() = vagones.sum{ vagon => vagon.pesoMax() }
 	
-	method arrastreTotalLocomotoras() = 
-		locomotoras.sum{ locomotora => locomotora.pesoMaxArrastre() }
+	method pesoTotalLocomotoras() = locomotoras.sum{ locomotora => locomotora.peso()}
 	
-	method puedeMoverse() = self.arrastreTotalLocomotoras() >= self.pesoTotalVagones()
+	method arrastreUtilTotalLocomotoras() = 
+		locomotoras.sum{ locomotora => locomotora.arrastreUtil() }
 	
-	method KilosQueFaltanParaMoverse(){
-		if (self.puedeMoverse()){
-			return 0
-		}
-	}
+	method puedeMoverse() = self.arrastreUtilTotalLocomotoras() >= self.pesoTotalVagones()
 	
-	}
+	method kilosQueFaltanParaMoverse()= if (self.puedeMoverse()) 0 
+		else self.pesoTotalVagones() - self.arrastreUtilTotalLocomotoras()
+	
+	method vagonMasPesado() = vagones.max{ vagon => vagon.pesoMax() }
+		
+	method esCompleja() = (vagones.size() + locomotoras.size())>20 ||
+		(self.pesoTotalVagones() + self.pesoTotalLocomotoras())> 10000
+	
+}
 

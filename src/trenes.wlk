@@ -1,12 +1,7 @@
 class VagonDePasajeros {
 
-	const property largo
-	const property ancho
-
-	constructor(_largo, _ancho) {
-		largo = _largo
-		ancho = _ancho
-	}
+	var property largo
+	var property ancho
 
 	method cantidadDePasajeros() {
 		if (ancho <= 2.5) {
@@ -22,11 +17,7 @@ class VagonDePasajeros {
 
 class VagonDeCarga {
 
-	const property cargaMax
-
-	constructor(_cargaMax) {
-		cargaMax = _cargaMax
-	}
+	var property cargaMax
 
 	method pesoMax() = cargaMax + 160
 
@@ -36,16 +27,11 @@ class VagonDeCarga {
 
 class Locomotora {
 
-	const property peso
-	const property velocidadMax
-	var property pesoVagones
+	var property peso
+	var property velocidadMax
+	var property pesoMaxArrastre
 
-	constructor(_peso, _velocidadMax) {
-		peso = _peso
-		velocidadMax = _velocidadMax
-	}
-
-	method pesoMaxArrastre() = pesoVagones - peso
+	method arrastreUtil() = pesoMaxArrastre - peso
 
 }
 
