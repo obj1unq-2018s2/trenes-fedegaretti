@@ -1,9 +1,18 @@
-class VagonDePasajeros {
+class Vagon {
 
-	var property largo
-	var property ancho
+	method pesoMax()
 
-	method cantidadDePasajeros() {
+	method esLiviano() = self.pesoMax() < 2500
+
+}
+
+class VagonDePasajeros inherits Vagon {
+
+	var largo
+	var ancho
+	var banios
+
+	method cantMaxDePasajeros() {
 		if (ancho <= 2.5) {
 			return largo * 8
 		} else {
@@ -11,27 +20,34 @@ class VagonDePasajeros {
 		}
 	}
 
-	method pesoMax() = self.cantidadDePasajeros() * 80
+	override method pesoMax() = self.cantMaxDePasajeros() * 80
+
+	method banios() = banios
 
 }
 
-class VagonDeCarga {
+class VagonDeCarga inherits Vagon {
 
 	var property cargaMax
 
-	method pesoMax() = cargaMax + 160
+	override method pesoMax() = cargaMax + 160
 
-	method cantidadDePasajeros() = 0
-
+	method cantMaxDePasajeros() = 0
+	
+	method banios()= 0
+	
 }
 
 class Locomotora {
 
-	var property peso
+	var peso
 	var property velocidadMax
-	var property pesoMaxArrastre
+	var pesoMaxArrastre
+
+	method peso() = peso
+
+	method pesoMaxArrastre() = pesoMaxArrastre
 
 	method arrastreUtil() = pesoMaxArrastre - peso
-
 }
 

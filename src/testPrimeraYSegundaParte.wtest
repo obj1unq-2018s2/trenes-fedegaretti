@@ -1,0 +1,138 @@
+import trenes.*
+import formacion.*
+import deposito.*
+
+
+describe "Tests Primera y Segunda parte" {
+
+	// vagones de carga
+	var vagonDeCarga1 = new VagonDeCarga(cargaMax = 15000)
+	var vagonDeCarga2 = new VagonDeCarga(cargaMax = 8000)
+	var vagonDeCarga3 = new VagonDeCarga(cargaMax = 500)
+	// vagones de pasajeros
+	var vagonDePasajeros1 = new VagonDePasajeros(ancho = 2, largo = 2.5,banios = 10)
+	var vagonDePasajeros2 = new VagonDePasajeros(ancho = 2, largo = 7, banios = 5)
+	// locomotoras
+	var locomotora1 = new Locomotora(
+		peso = 1000, pesoMaxArrastre = 15000, velocidadMax = 80)
+	var locomotora2 = new Locomotora(
+		peso = 800, pesoMaxArrastre = 11000, velocidadMax = 100)
+	var locomotora3 = new Locomotora(
+		peso=500, pesoMaxArrastre = 8000, velocidadMax = 50)
+	var locomotora4 = new Locomotora(
+		peso = 10000, pesoMaxArrastre=10100, velocidadMax=100)
+	var locomotora5 = new Locomotora(
+		peso=100,pesoMaxArrastre=3000,velocidadMax=60)
+	var locomotora6 = new Locomotora(
+		peso = 100, pesoMaxArrastre = 30000, velocidadMax = 350)
+	
+	
+	// formaciones
+	
+	var largaDist1 = new FormacionDeLargaDistancia(cantCiudades=2)
+		
+	var largaDist2 = new FormacionDeLargaDistancia(cantCiudades=3)
+	
+	var altaVel1 = new FormacionDeAltaVelocidad()
+	
+	var formacion1 = new FormacionDeCortaDistancia()
+	var formacion2 = new FormacionDeCortaDistancia()
+	var formacion3 = new FormacionDeCortaDistancia()
+	var formacion4 = new FormacionDeCortaDistancia()
+	var formacion5 = new FormacionDeCortaDistancia()
+	// depositos
+	
+	var deposito1 = new Deposito(
+		formaciones=#{formacion1,formacion4},locomotoras=#{locomotora1})
+	var deposito2 = new Deposito(
+		formaciones=#{formacion1},locomotoras=#{locomotora1,locomotora3,locomotora5})	
+	var deposito3 = new Deposito(
+		formaciones=#{formacion2,formacion3},locomotoras=#{locomotora1,locomotora3,locomotora5})
+	fixture{
+		formacion1.agregarLocomotora(locomotora1)
+		formacion1.agregarLocomotora(locomotora3)
+		formacion1.agregarVagon(vagonDeCarga1)
+		formacion1.agregarVagon(vagonDeCarga2)
+		formacion2.agregarLocomotora(locomotora2)
+		formacion2.agregarVagon(vagonDePasajeros1)
+		formacion2.agregarVagon(vagonDePasajeros2)
+		formacion3.agregarVagon(vagonDeCarga2)
+		formacion3.agregarLocomotora(locomotora4)
+		formacion4.agregarLocomotora(locomotora1)
+		formacion4.agregarVagon(vagonDePasajeros1)
+		formacion4.agregarVagon(vagonDePasajeros2)
+		formacion4.agregarVagon(vagonDeCarga2)
+		altaVel1.agregarLocomotora(locomotora6)
+		altaVel1.agregarVagon(vagonDeCarga3)
+		largaDist1.agregarLocomotora(locomotora2)
+		largaDist2.agregarLocomotora(locomotora3)
+		largaDist1.agregarVagon(vagonDeCarga1)
+		largaDist1.agregarVagon(vagonDeCarga2)
+		largaDist2.agregarVagon(vagonDePasajeros1)
+		largaDist2.agregarVagon(vagonDePasajeros2)
+		formacion5.agregarLocomotora(locomotora2)
+		formacion5.agregarVagon(vagonDeCarga2)
+	}
+	
+	test "Vagones livianos"{
+		assert.equals(formacion2.cantVagonesLivianos(),1)
+	}
+	
+	test "Velocidad maxima formacion"{
+		assert.equals(formacion1.velocidadMax(),locomotora3.velocidadMax())
+	}
+	
+	test "Formacion es eficiente"{
+		assert.that(formacion2.esEficiente())	
+	}
+	
+	test "Formacion no es eficiente"{
+		assert.that(!formacion3.esEficiente())
+	}
+	
+	test "Formacion puede moverse"{
+		assert.that(formacion2.puedeMoverse())
+	}
+	
+	test "Formacion no puede moverse"{
+		assert.that(!formacion1.puedeMoverse())
+	}
+	
+	test "No le faltan kilos para moverse"{
+		assert.equals(formacion2.kilosQueFaltanParaMoverse(),0)
+	}
+	
+	test "Faltan kilos para moverse"{
+		assert.equals(formacion1.kilosQueFaltanParaMoverse(),1820)
+	}
+	
+	test "Vagones mas pesados de cada formacion"{
+		assert.equals(deposito1.vagonMasPesadoDeCadaFormacion(),#{vagonDeCarga2,vagonDeCarga1})
+	}
+	
+	test "Es formacion compleja" {
+		assert.that(formacion1.esCompleja())
+	}
+	
+	test "Agregar locomotora para mover"{
+		deposito2.agregarLocomotoraAFormacion(formacion3)
+		deposito3.agregarLocomotoraAFormacion(formacion2)
+		assert.that(formacion2.puedeMoverse())
+		assert.that(formacion3.puedeMoverse())
+		
+	}
+	
+	test "Formaciones estan bien armadas" {
+	    assert.that(formacion5.estaBienArmada())
+		assert.that(largaDist2.estaBienArmada())
+		assert.that(altaVel1.estaBienArmada())
+	}
+	
+	test "Limite de velocidad"{
+		assert.equals(altaVel1.velocidadMax(),350)
+		assert.equals(largaDist2.velocidadMax(),50)
+		assert.equals(formacion1.velocidadMax(),50)
+	}
+	
+	
+}
